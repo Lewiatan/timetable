@@ -5,7 +5,5 @@ services:
         build: docker/
         ports:
             - '3000:3000'
-        environment:
-            - LANGCHAIN_API_KEY=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
         volumes:
             - ./:/app
