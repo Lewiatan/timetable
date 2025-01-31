@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputWithButton } from '../common/InputWithButton';
+import { Input } from '../common/Input';
 import { SectionContainer } from '../common/SectionContainer';
 
 interface Grade {
@@ -35,7 +35,7 @@ export const GradeSection: React.FC<GradeSectionProps> = ({
   return (
     <SectionContainer title="Grades">
       <div className="space-y-4">
-        <InputWithButton
+        <Input
           value={newGradeName}
           onChange={(e) => setNewGradeName(e.target.value)}
           onSubmit={addGrade}

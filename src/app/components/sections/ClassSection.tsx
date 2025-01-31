@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputWithButton } from '../common/InputWithButton';
+import { Input } from '../common/Input';
 import { SectionContainer } from '../common/SectionContainer';
 
 interface Class {
@@ -35,7 +35,7 @@ export const ClassSection: React.FC<ClassSectionProps> = ({
   return (
     <SectionContainer title="Classes">
       <div className="space-y-2 mb-4">
-        <InputWithButton
+        <Input
           value={newClassName}
           onChange={(e) => setNewClassName(e.target.value)}
           onSubmit={addClass}
