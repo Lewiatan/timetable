@@ -30,6 +30,7 @@ interface TeacherSectionProps {
   setNewTeacherCapabilities: (capabilities: string[]) => void;
   setNewTeacherRoom: (roomId: string) => void;
   addTeacher: () => void;
+  removeTeacher: (id: string) => void;
 }
 
 export const TeacherSection: React.FC<TeacherSectionProps> = ({
@@ -43,6 +44,7 @@ export const TeacherSection: React.FC<TeacherSectionProps> = ({
   setNewTeacherCapabilities,
   setNewTeacherRoom,
   addTeacher,
+  removeTeacher,
 }) => {
   return (
     <SectionContainer title="Teachers">
@@ -107,20 +109,28 @@ export const TeacherSection: React.FC<TeacherSectionProps> = ({
       </div>
       <ul className="space-y-2">
         {teachers.map((teacher) => (
-          <li key={teacher.id} className="bg-gray-700 p-2 rounded">
-            <div>{teacher.name}</div>
-            <div className="text-sm text-gray-400">
-              Capabilities:{' '}
-              {teacher.capabilities
-                .map((cap) => {
-                  const lecture = lectures.find((l) => l.id === cap);
-                  return lecture ? lecture.name : cap;
-                })
-                .join(', ')}
+          <li key={teacher.id} className="bg-gray-700 p-2 rounded flex justify-between items-start">
+            <div>
+              <div>{teacher.name}</div>
+              <div className="text-sm text-gray-400">
+                Capabilities:{' '}
+                {teacher.capabilities
+                  .map((cap) => {
+                    const lecture = lectures.find((l) => l.id === cap);
+                    return lecture ? lecture.name : cap;
+                  })
+                  .join(', ')}
+              </div>
+              <div className="text-sm text-gray-400">
+                Room: {rooms.find((r) => r.id === teacher.assignedRoom)?.name || 'None'}
+              </div>
             </div>
-            <div className="text-sm text-gray-400">
-              Room: {rooms.find((r) => r.id === teacher.assignedRoom)?.name || 'None'}
-            </div>
+            <button
+              onClick={() => removeTeacher(teacher.id)}
+              className="text-red-500 hover:text-red-700 px-2"
+            >
+              ×
+            </button>
           </li>
         ))}
       </ul>

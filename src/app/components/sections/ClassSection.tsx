@@ -21,6 +21,7 @@ interface ClassSectionProps {
   setNewClassName: (name: string) => void;
   setSelectedGrade: (gradeId: string) => void;
   addClass: () => void;
+  removeClass: (id: string) => void;
 }
 
 export const ClassSection: React.FC<ClassSectionProps> = ({
@@ -31,6 +32,7 @@ export const ClassSection: React.FC<ClassSectionProps> = ({
   setNewClassName,
   setSelectedGrade,
   addClass,
+  removeClass,
 }) => {
   return (
     <SectionContainer title="Classes">
@@ -62,11 +64,19 @@ export const ClassSection: React.FC<ClassSectionProps> = ({
       </div>
       <ul className="space-y-2">
         {classes.map((cls) => (
-          <li key={cls.id} className="bg-gray-700 p-2 rounded">
-            <div>{cls.name}</div>
-            <div className="text-sm text-gray-400">
-              Grade: {grades.find((g) => g.id === cls.grade)?.name}
+          <li key={cls.id} className="bg-gray-700 p-2 rounded flex justify-between items-start">
+            <div>
+              <div>{cls.name}</div>
+              <div className="text-sm text-gray-400">
+                Grade: {grades.find((g) => g.id === cls.grade)?.name}
+              </div>
             </div>
+            <button
+              onClick={() => removeClass(cls.id)}
+              className="text-red-500 hover:text-red-700 px-2"
+            >
+              ×
+            </button>
           </li>
         ))}
       </ul>

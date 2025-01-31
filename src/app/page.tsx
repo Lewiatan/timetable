@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { loadFromStorage, saveToStorage } from '../../utils/localStorage';
 import { LectureSection } from './components/sections/LectureSection';
 import { RoomSection } from './components/sections/RoomSection';
 import { TeacherSection } from './components/sections/TeacherSection';
 import { GradeSection } from './components/sections/GradeSection';
 import { ClassSection } from './components/sections/ClassSection';
 import { TimetableSection } from './components/TimetableSection';
+import { removeItem } from '@/utils/removeItem';
 
 interface Lecture {
   id: string;
@@ -38,11 +40,17 @@ interface Class {
 }
 
 export default function Home() {
-  const [lectures, setLectures] = useState<Lecture[]>([]);
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [grades, setGrades] = useState<Grade[]>([]);
-  const [classes, setClasses] = useState<Class[]>([]);
+  const [lectures, setLectures] = useState<Lecture[]>(() => loadFromStorage('lectures', []));
+  const [rooms, setRooms] = useState<Room[]>(() => loadFromStorage('rooms', []));
+  const [teachers, setTeachers] = useState<Teacher[]>(() => loadFromStorage('teachers', []));
+  const [grades, setGrades] = useState<Grade[]>(() => loadFromStorage('grades', []));
+  const [classes, setClasses] = useState<Class[]>(() => loadFromStorage('classes', []));
+
+  useEffect(() => { saveToStorage('lectures', lectures); }, [lectures]);
+  useEffect(() => { saveToStorage('rooms', rooms); }, [rooms]);
+  useEffect(() => { saveToStorage('teachers', teachers); }, [teachers]);
+  useEffect(() => { saveToStorage('grades', grades); }, [grades]);
+  useEffect(() => { saveToStorage('classes', classes); }, [classes]);
   const [timetable, setTimetable] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -63,11 +71,19 @@ export default function Home() {
     }
   };
 
+  const removeLecture = (id: string) => {
+    removeItem('lectures', id, lectures, setLectures);
+  };
+
   const addRoom = () => {
     if (newRoomName) {
       setRooms([...rooms, { id: Date.now().toString(), name: newRoomName }]);
       setNewRoomName('');
     }
+  };
+
+  const removeRoom = (id: string) => {
+    removeItem('rooms', id, rooms, setRooms);
   };
 
   const addTeacher = () => {
@@ -84,6 +100,10 @@ export default function Home() {
     }
   };
 
+  const removeTeacher = (id: string) => {
+    removeItem('teachers', id, teachers, setTeachers);
+  };
+
   const addGrade = () => {
     if (newGradeName) {
       setGrades([...grades, {
@@ -96,6 +116,10 @@ export default function Home() {
     }
   };
 
+  const removeGrade = (id: string) => {
+    removeItem('grades', id, grades, setGrades);
+  };
+
   const addClass = () => {
     if (newClassName && selectedGrade) {
       setClasses([...classes, {
@@ -106,6 +130,10 @@ export default function Home() {
       setNewClassName('');
       setSelectedGrade('');
     }
+  };
+
+  const removeClass = (id: string) => {
+    removeItem('classes', id, classes, setClasses);
   };
 
   const generateTimetable = async () => {
@@ -152,6 +180,7 @@ export default function Home() {
           newLectureName={newLectureName}
           setNewLectureName={setNewLectureName}
           addLecture={addLecture}
+          removeLecture={removeLecture}
         />
 
         <RoomSection
@@ -159,6 +188,7 @@ export default function Home() {
           newRoomName={newRoomName}
           setNewRoomName={setNewRoomName}
           addRoom={addRoom}
+          removeRoom={removeRoom}
         />
 
         <TeacherSection
@@ -172,6 +202,7 @@ export default function Home() {
           setNewTeacherCapabilities={setNewTeacherCapabilities}
           setNewTeacherRoom={setNewTeacherRoom}
           addTeacher={addTeacher}
+          removeTeacher={removeTeacher}
         />
 
         <GradeSection
@@ -182,6 +213,7 @@ export default function Home() {
           setNewGradeName={setNewGradeName}
           setLectureHours={setLectureHours}
           addGrade={addGrade}
+          removeGrade={removeGrade}
         />
 
         <ClassSection
@@ -192,6 +224,7 @@ export default function Home() {
           setNewClassName={setNewClassName}
           setSelectedGrade={setSelectedGrade}
           addClass={addClass}
+          removeClass={removeClass}
         />
       </div>
 

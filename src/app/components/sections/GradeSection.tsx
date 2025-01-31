@@ -21,6 +21,7 @@ interface GradeSectionProps {
   setNewGradeName: (name: string) => void;
   setLectureHours: (hours: { [key: string]: number }) => void;
   addGrade: () => void;
+  removeGrade: (id: string) => void;
 }
 
 export const GradeSection: React.FC<GradeSectionProps> = ({
@@ -31,6 +32,7 @@ export const GradeSection: React.FC<GradeSectionProps> = ({
   setNewGradeName,
   setLectureHours,
   addGrade,
+  removeGrade,
 }) => {
   return (
     <SectionContainer title="Grades">
@@ -72,18 +74,26 @@ export const GradeSection: React.FC<GradeSectionProps> = ({
         <h3 className="text-sm font-medium text-gray-300 mb-2">Existing Grades:</h3>
         <ul className="space-y-2">
           {grades.map((grade) => (
-            <li key={grade.id} className="bg-gray-700 p-2 rounded">
-              <div className="font-medium">{grade.name}</div>
-              <div className="mt-2 space-y-1">
-                {Object.entries(grade.requiredLectures).map(([lectureId, hours]) => {
-                  const lecture = lectures.find((l) => l.id === lectureId);
-                  return lecture ? (
-                    <div key={lectureId} className="text-sm text-gray-400">
-                      {lecture.name}: {hours} hours/week
-                    </div>
-                  ) : null;
-                })}
+            <li key={grade.id} className="bg-gray-700 p-2 rounded flex justify-between items-start">
+              <div>
+                <div className="font-medium">{grade.name}</div>
+                <div className="mt-2 space-y-1">
+                  {Object.entries(grade.requiredLectures).map(([lectureId, hours]) => {
+                    const lecture = lectures.find((l) => l.id === lectureId);
+                    return lecture ? (
+                      <div key={lectureId} className="text-sm text-gray-400">
+                        {lecture.name}: {hours} hours/week
+                      </div>
+                    ) : null;
+                  })}
+                </div>
               </div>
+              <button
+                onClick={() => removeGrade(grade.id)}
+                className="text-red-500 hover:text-red-700 px-2"
+              >
+                ×
+              </button>
             </li>
           ))}
         </ul>

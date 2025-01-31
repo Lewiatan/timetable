@@ -12,6 +12,7 @@ interface LectureSectionProps {
   newLectureName: string;
   setNewLectureName: (name: string) => void;
   addLecture: () => void;
+  removeLecture: (id: string) => void;
 }
 
 export const LectureSection: React.FC<LectureSectionProps> = ({
@@ -19,6 +20,7 @@ export const LectureSection: React.FC<LectureSectionProps> = ({
   newLectureName,
   setNewLectureName,
   addLecture,
+  removeLecture,
 }) => {
   return (
     <SectionContainer title="Lectures">
@@ -30,8 +32,14 @@ export const LectureSection: React.FC<LectureSectionProps> = ({
       />
       <ul className="space-y-2">
         {lectures.map((lecture) => (
-          <li key={lecture.id} className="bg-gray-700 p-2 rounded">
-            {lecture.name}
+          <li key={lecture.id} className="bg-gray-700 p-2 rounded flex justify-between items-center">
+            <span>{lecture.name}</span>
+            <button
+              onClick={() => removeLecture(lecture.id)}
+              className="text-red-500 hover:text-red-400"
+            >
+              ×
+            </button>
           </li>
         ))}
       </ul>

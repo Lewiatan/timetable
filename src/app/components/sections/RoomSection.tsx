@@ -12,6 +12,7 @@ interface RoomSectionProps {
   newRoomName: string;
   setNewRoomName: (name: string) => void;
   addRoom: () => void;
+  removeRoom: (id: string) => void;
 }
 
 export const RoomSection: React.FC<RoomSectionProps> = ({
@@ -19,6 +20,7 @@ export const RoomSection: React.FC<RoomSectionProps> = ({
   newRoomName,
   setNewRoomName,
   addRoom,
+  removeRoom,
 }) => {
   return (
     <SectionContainer title="Rooms">
@@ -30,8 +32,14 @@ export const RoomSection: React.FC<RoomSectionProps> = ({
       />
       <ul className="space-y-2">
         {rooms.map((room) => (
-          <li key={room.id} className="bg-gray-700 p-2 rounded">
-            {room.name}
+          <li key={room.id} className="bg-gray-700 p-2 rounded flex justify-between items-center">
+            <span>{room.name}</span>
+            <button
+              onClick={() => removeRoom(room.id)}
+              className="text-red-500 hover:text-red-400"
+            >
+              ×
+            </button>
           </li>
         ))}
       </ul>
