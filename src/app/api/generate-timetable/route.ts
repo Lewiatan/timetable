@@ -85,10 +85,6 @@ export async function POST(request: Request) {
     const chain = prompt.pipe(model).pipe(outputParser);
 
     const response = await chain.invoke({
-      lectures: JSON.stringify(lectures, null, 2),
-      rooms: JSON.stringify(rooms, null, 2),
-      teachers: JSON.stringify(teachers, null, 2),
-      grades: JSON.stringify(grades, null, 2),
       classes: JSON.stringify(enhancedClasses, null, 2),
     });
 
