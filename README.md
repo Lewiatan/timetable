@@ -26,12 +26,7 @@ cp .env.example .env
 Then edit the `.env` file and replace the placeholder values with your actual API keys:
 ```bash
 GOOGLE_API_KEY=your-gemini-api-key-here
-LANGCHAIN_API_KEY=your-langchain-api-key-here
 ```
-
-You'll need both:
-- A Gemini API key for the Google AI services
-- A LangChain API key for additional AI capabilities
 
 4. Build and start the containers using Docker Compose:
 ```bash
