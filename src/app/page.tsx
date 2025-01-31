@@ -164,6 +164,13 @@ export default function Home() {
     removeItem('classes', id, classes, setClasses);
   };
 
+  const editClass = (id: string, name: string, grade: string) => {
+    const updatedClasses = classes.map(cls =>
+      cls.id === id ? { ...cls, name, grade } : cls
+    );
+    setClasses(updatedClasses);
+  };
+
   const generateTimetable = async () => {
     setIsLoading(true);
     try {
@@ -257,6 +264,7 @@ export default function Home() {
           setSelectedGrade={setSelectedGrade}
           addClass={addClass}
           removeClass={removeClass}
+          editClass={editClass}
         />
       </div>
 

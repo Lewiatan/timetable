@@ -22,6 +22,7 @@ interface ClassSectionProps {
   setSelectedGrade: (gradeId: string) => void;
   addClass: () => void;
   removeClass: (id: string) => void;
+  editClass: (id: string, name: string, grade: string) => void;
 }
 
 export const ClassSection: React.FC<ClassSectionProps> = ({
@@ -33,7 +34,11 @@ export const ClassSection: React.FC<ClassSectionProps> = ({
   setSelectedGrade,
   addClass,
   removeClass,
+  editClass,
 }) => {
+  const [editingId, setEditingId] = React.useState<string | null>(null);
+  const [editName, setEditName] = React.useState("");
+  const [editGrade, setEditGrade] = React.useState("");
   return (
     <SectionContainer title="Classes">
       <div className="space-y-2 mb-4">
@@ -65,18 +70,73 @@ export const ClassSection: React.FC<ClassSectionProps> = ({
       <ul className="space-y-2">
         {classes.map((cls) => (
           <li key={cls.id} className="bg-gray-700 p-2 rounded flex justify-between items-start">
-            <div>
-              <div>{cls.name}</div>
-              <div className="text-sm text-gray-400">
-                Grade: {grades.find((g) => g.id === cls.grade)?.name}
+            {editingId === cls.id ? (
+              <div className="w-full space-y-2">
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="w-full p-2 rounded bg-gray-600 text-white"
+                  placeholder="Class name"
+                />
+                <select
+                  value={editGrade}
+                  onChange={(e) => setEditGrade(e.target.value)}
+                  className="w-full p-2 rounded bg-gray-600 text-white"
+                >
+                  <option value="">Select a grade</option>
+                  {grades.map((grade) => (
+                    <option key={grade.id} value={grade.id}>
+                      {grade.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => {
+                      editClass(cls.id, editName, editGrade);
+                      setEditingId(null);
+                    }}
+                    className="text-green-500 hover:text-green-700 px-2"
+                  >
+                    ✓
+                  </button>
+                  <button
+                    onClick={() => setEditingId(null)}
+                    className="text-red-500 hover:text-red-700 px-2"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
-            </div>
-            <button
-              onClick={() => removeClass(cls.id)}
-              className="text-red-500 hover:text-red-700 px-2"
-            >
-              ×
-            </button>
+            ) : (
+              <>
+                <div>
+                  <div className="font-medium">{cls.name}</div>
+                  <div className="text-sm text-gray-400">
+                    Grade: {grades.find((g) => g.id === cls.grade)?.name}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setEditingId(cls.id);
+                      setEditName(cls.name);
+                      setEditGrade(cls.grade);
+                    }}
+                    className="text-blue-500 hover:text-blue-700 px-2"
+                  >
+                    ✎
+                  </button>
+                  <button
+                    onClick={() => removeClass(cls.id)}
+                    className="text-red-500 hover:text-red-700 px-2"
+                  >
+                    ×
+                  </button>
+                </div>
+              </>
+            )}
           </li>
         ))}
       </ul>
