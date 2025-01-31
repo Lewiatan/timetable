@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+    app:
+        build: docker/
+        ports:
+            - '3000:3000'
+        environment:
+            - LANGCHAIN_API_KEY=your_api_key_here
+        volumes:
+            - ./:/app
