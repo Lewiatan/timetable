@@ -75,6 +75,13 @@ export default function Home() {
     removeItem('lectures', id, lectures, setLectures);
   };
 
+  const editLecture = (id: string, name: string) => {
+    const updatedLectures = lectures.map(lecture =>
+      lecture.id === id ? { ...lecture, name } : lecture
+    );
+    setLectures(updatedLectures);
+  };
+
   const addRoom = () => {
     if (newRoomName) {
       setRooms([...rooms, { id: Date.now().toString(), name: newRoomName }]);
@@ -84,6 +91,13 @@ export default function Home() {
 
   const removeRoom = (id: string) => {
     removeItem('rooms', id, rooms, setRooms);
+  };
+
+  const editRoom = (id: string, name: string) => {
+    const updatedRooms = rooms.map(room =>
+      room.id === id ? { ...room, name } : room
+    );
+    setRooms(updatedRooms);
   };
 
   const addTeacher = () => {
@@ -181,6 +195,7 @@ export default function Home() {
           setNewLectureName={setNewLectureName}
           addLecture={addLecture}
           removeLecture={removeLecture}
+          editLecture={editLecture}
         />
 
         <RoomSection
@@ -189,6 +204,7 @@ export default function Home() {
           setNewRoomName={setNewRoomName}
           addRoom={addRoom}
           removeRoom={removeRoom}
+          editRoom={editRoom}
         />
 
         <TeacherSection
