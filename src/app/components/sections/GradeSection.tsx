@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '../common/Input';
 import { SectionContainer } from '../common/SectionContainer';
 
@@ -22,6 +22,7 @@ interface GradeSectionProps {
   setLectureHours: (hours: { [key: string]: number }) => void;
   addGrade: () => void;
   removeGrade: (id: string) => void;
+  editGrade: (id: string, name: string, requiredLectures: { [key: string]: number }) => void;
 }
 
 export const GradeSection: React.FC<GradeSectionProps> = ({
@@ -33,7 +34,11 @@ export const GradeSection: React.FC<GradeSectionProps> = ({
   setLectureHours,
   addGrade,
   removeGrade,
+  editGrade,
 }) => {
+  const [editingGrade, setEditingGrade] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editHours, setEditHours] = useState<{ [key: string]: number }>({});
   return (
     <SectionContainer title="Grades">
       <div className="space-y-4">
@@ -75,25 +80,86 @@ export const GradeSection: React.FC<GradeSectionProps> = ({
         <ul className="space-y-2">
           {grades.map((grade) => (
             <li key={grade.id} className="bg-gray-700 p-2 rounded flex justify-between items-start">
-              <div>
-                <div className="font-medium">{grade.name}</div>
-                <div className="mt-2 space-y-1">
-                  {Object.entries(grade.requiredLectures).map(([lectureId, hours]) => {
-                    const lecture = lectures.find((l) => l.id === lectureId);
-                    return lecture ? (
-                      <div key={lectureId} className="text-sm text-gray-400">
-                        {lecture.name}: {hours} hours/week
+              {editingGrade === grade.id ? (
+                <div className="w-full">
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="w-full p-2 mb-2 rounded bg-gray-600 text-white"
+                  />
+                  <div className="space-y-2">
+                    {lectures.map((lecture) => (
+                      <div key={lecture.id} className="flex items-center gap-2">
+                        <label className="flex-1 text-sm text-gray-300">{lecture.name}:</label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={editHours[lecture.id] || 0}
+                          onChange={(e) =>
+                            setEditHours({
+                              ...editHours,
+                              [lecture.id]: parseInt(e.target.value) || 0,
+                            })
+                          }
+                          className="w-20 p-2 rounded bg-gray-600 text-white"
+                        />
                       </div>
-                    ) : null;
-                  })}
+                    ))}
+                  </div>
+                  <div className="mt-2 flex justify-end gap-2">
+                    <button
+                      onClick={() => {
+                        editGrade(grade.id, editName, editHours);
+                        setEditingGrade(null);
+                      }}
+                      className="text-green-500 hover:text-green-700 px-2"
+                    >
+                      ✓
+                    </button>
+                    <button
+                      onClick={() => setEditingGrade(null)}
+                      className="text-red-500 hover:text-red-700 px-2"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <button
-                onClick={() => removeGrade(grade.id)}
-                className="text-red-500 hover:text-red-700 px-2"
-              >
-                ×
-              </button>
+              ) : (
+                <>
+                  <div>
+                    <div className="font-medium">{grade.name}</div>
+                    <div className="mt-2 space-y-1">
+                      {Object.entries(grade.requiredLectures).map(([lectureId, hours]) => {
+                        const lecture = lectures.find((l) => l.id === lectureId);
+                        return lecture ? (
+                          <div key={lectureId} className="text-sm text-gray-400">
+                            {lecture.name}: {hours} hours/week
+                          </div>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setEditingGrade(grade.id);
+                        setEditName(grade.name);
+                        setEditHours(grade.requiredLectures);
+                      }}
+                      className="text-blue-500 hover:text-blue-700 px-2"
+                    >
+                      ✎
+                    </button>
+                    <button
+                      onClick={() => removeGrade(grade.id)}
+                      className="text-red-500 hover:text-red-700 px-2"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </>
+              )}
             </li>
           ))}
         </ul>

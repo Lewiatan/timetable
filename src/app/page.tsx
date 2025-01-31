@@ -118,6 +118,13 @@ export default function Home() {
     removeItem('teachers', id, teachers, setTeachers);
   };
 
+  const editTeacher = (id: string, name: string, capabilities: string[], assignedRoom?: string) => {
+    const updatedTeachers = teachers.map(teacher =>
+      teacher.id === id ? { ...teacher, name, capabilities, assignedRoom } : teacher
+    );
+    setTeachers(updatedTeachers);
+  };
+
   const addGrade = () => {
     if (newGradeName) {
       setGrades([...grades, {
@@ -132,6 +139,13 @@ export default function Home() {
 
   const removeGrade = (id: string) => {
     removeItem('grades', id, grades, setGrades);
+  };
+
+  const editGrade = (id: string, name: string, requiredLectures: { [key: string]: number }) => {
+    const updatedGrades = grades.map(grade =>
+      grade.id === id ? { ...grade, name, requiredLectures } : grade
+    );
+    setGrades(updatedGrades);
   };
 
   const addClass = () => {
@@ -219,6 +233,7 @@ export default function Home() {
           setNewTeacherRoom={setNewTeacherRoom}
           addTeacher={addTeacher}
           removeTeacher={removeTeacher}
+          editTeacher={editTeacher}
         />
 
         <GradeSection
@@ -230,6 +245,7 @@ export default function Home() {
           setLectureHours={setLectureHours}
           addGrade={addGrade}
           removeGrade={removeGrade}
+          editGrade={editGrade}
         />
 
         <ClassSection
